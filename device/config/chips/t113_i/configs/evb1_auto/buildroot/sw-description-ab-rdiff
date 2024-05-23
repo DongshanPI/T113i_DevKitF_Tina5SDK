@@ -1,0 +1,127 @@
+software =
+{
+    version = "0.1.0";
+    description = "Firmware update for T113 Project";
+
+    stable = {
+
+        /* now in systemA, we need to upgrade systemB(bootB, rootfsB, dspxB) */
+        now_A_next_B = {
+            images: (
+                {
+                    filename = "kernel.rdiff.delta";
+                    type = "rdiff_image";
+                    device = "/dev/mmcblk0p5";
+                    properties: {
+                        rdiffbase = ["/dev/mmcblk0p4"];
+                    };
+                },
+                {
+                    filename = "rootfs.rdiff.delta";
+                    type = "rdiff_image";
+                    device = "/dev/mmcblk0p7";
+                    properties: {
+                        rdiffbase = ["/dev/mmcblk0p6"];
+                    };
+                },
+                {
+                    filename = "uboot";
+                    type = "awuboot";
+                },
+                {
+                    filename = "boot0";
+                    type = "awboot0";
+                }
+            );
+            bootenv: (
+                {
+                    name = "swu_mode";
+                    value = "";
+                },
+                {
+                    name = "boot_partition";
+                    value = "bootB";
+                },
+                {
+                    name = "root_partition";
+                    value = "rootfsB";
+                },
+                {
+                    name = "swu_next";
+                    value = "reboot";
+                }
+            );
+        };
+
+        /* now in systemB, we need to upgrade systemA(bootA, rootfsA, dspxA) */
+        now_B_next_A = {
+            images: (
+                {
+                    filename = "kernel.rdiff.delta";
+                    type = "rdiff_image";
+                    device = "/dev/mmcblk0p4";
+                    properties: {
+                        rdiffbase = ["/dev/mmcblk0p5"];
+                    };
+                },
+                {
+                    filename = "rootfs.rdiff.delta";
+                    type = "rdiff_image";
+                    device = "/dev/mmcblk0p6";
+                    properties: {
+                        rdiffbase = ["/dev/mmcblk0p7"];
+                    };
+                },
+                {
+                    filename = "uboot";
+                    type = "awuboot";
+                },
+                {
+                    filename = "boot0";
+                    type = "awboot0";
+                }
+            );
+            bootenv: (
+                {
+                    name = "swu_mode";
+                    value = "";
+                },
+                {
+                    name = "boot_partition";
+                    value = "bootA";
+                },
+                {
+                    name = "root_partition";
+                    value = "rootfsA";
+                },
+                {
+                    name = "swu_next";
+                    value = "reboot";
+                }
+            );
+        };
+
+
+    };
+
+    /* when not call with -e xxx,xxx    just clean */
+    bootenv: (
+        {
+            name = "swu_param";
+            value = "";
+        },
+        {
+            name = "swu_software";
+            value = "";
+        },
+        {
+            name = "swu_mode";
+            value = "";
+        },
+        {
+            name = "swu_version";
+            value = "";
+        }
+    );
+
+}
