@@ -1,0 +1,18 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+amixer -Dhw:audiocodec cset name="Headphone Switch" 1
+
+
+# capture
+amixer -Dhw:audiocodec cset name='MIC3 Input Select' 0
+
+amixer -Dhw:audiocodec cset name='ADC1 Input LINEINL Switch' 1
+amixer -Dhw:audiocodec cset name='ADC2 Input LINEINR Switch' 1
+amixer -Dhw:audiocodec cset name='ADC3 Input MIC3 Boost Switch' 1
+
+amixer -Dhw:audiocodec cset name='LINEINL gain volume' 1
+amixer -Dhw:audiocodec cset name='LINEINR gain volume' 1
+amixer -Dhw:audiocodec cset name='MIC3 gain volume' 19
+
+exit 0

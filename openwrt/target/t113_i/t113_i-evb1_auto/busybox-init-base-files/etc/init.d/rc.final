@@ -1,0 +1,72 @@
+#!/bin/sh
+
+echo "------run rc.final file-----"
+#echo "insmod wifi modules"
+#insmod  /lib/modules/3.4.39/8723ds.ko
+#insmod  /lib/modules/3.4.39/bcmdhd.ko
+#insmod  /lib/modules/3.4.39/xradio_mac.ko
+#insmod  /lib/modules/3.4.39/xradio_core.ko
+#insmod  /lib/modules/3.4.39/xradio_wlan.ko
+
+export TSLIB_CALIBFILE=/etc/pointercal
+export TSLIB_CONFFILE=/etc/ts.conf
+export TSLIB_PLUGINDIR=/usr/lib/ts
+export TSLIB_CONSOLEDEVICE=none
+export TSLIB_FBDEVICE=/dev/fb0
+export TSLIB_TSDEVICE=/dev/input/event3
+
+#export LD_LIBRARY_PATH=/usr/lib/eyesee-mpp:${LD_LIBRARY_PATH}
+#ulimit -c unlimited
+#echo /mnt/extsd/core.exe[%e].pid[%p].sig[%s] > /proc/sys/kernel/core_pattern
+
+#for i in /etc/init.d/S??* ;do
+
+     # Ignore dangling symlinks (if any).
+#     [ ! -f "$i" ] && continue
+
+#     case "$i" in
+#    *.sh)
+        # Source shell script for speed.
+#        (
+#        trap - INT QUIT TSTP
+#        set start
+#        . $i
+#        )
+#        ;;
+#    *)
+        # No sh extension, so fork subprocess.
+#        $i start
+#        ;;
+#    esac
+#done
+
+#if [ -z "$(grep '\<vfat\>' /proc/mounts)" ]; then
+#    ! /bin/mount -t vfat /dev/mmcblk0 /mnt/extsd 2>/dev/null &&
+#    /bin/mount -t vfat /dev/mmcblk0p1 /mnt/extsd
+#fi
+#free > /dev/console
+#mount -t debugfs none /tmp
+#echo lcd0 > /tmp/dispdbg/name
+#echo disable > /tmp/dispdbg/command
+#echo 1 > /tmp/dispdbg/start
+#echo enable > /tmp/dispdbg/command
+#echo 1 > /tmp/dispdbg/start
+#umount /tmp
+if [ x${boot_partition} == xboot ];then 
+	amixer cset name="Headphone Switch" 1
+	cat /sys/devices/platform/soc@3000000/soc@3000000:usbc0@0/usb_host
+	nice -n -20 /usr/bin/story_bin &
+else
+	cat /sys/devices/platform/soc@3000000/soc@3000000:usbc0@0/usb_host
+	export swu_software=$(fw_printenv -n swu_software 2>/dev/null)
+	export swu_mode=$(fw_printenv -n swu_mode 2>/dev/null)
+	nice -n -20 /usr/bin/story_ota_bin &
+fi
+if [ -e /tmp/private/ ]; then 
+	echo "clear private mount info"
+	umount /tmp/private/
+	rm -rf /tmp/private
+	ubiblock -r /dev/by-name/private
+fi
+
+
