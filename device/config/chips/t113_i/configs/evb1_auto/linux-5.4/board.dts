@@ -126,7 +126,7 @@
 		regulator-name = "vdd_3v3";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		regulator-enable-ramp-delay = <1000>;
+		//regulator-enable-ramp-delay = <1000>;
 		enable-active-high;
 	};
 	dsp0_rproc: dsp_rproc@0 {
@@ -590,7 +590,8 @@
 		       "PE12", "PE13", "PE14", "PE15";
 		function = "gmac0";
 		muxsel = <8>; /* for uboot driver */
-		drive-strength = <10>;
+                allwinner,drive = <1>;
+                allwinner,pull = <0>;
 	};
 
 	gmac0_pins_b: gmac@1 {
@@ -599,6 +600,10 @@
 		       "PE8", "PE9", "PE10", "PE11",
 		       "PE12", "PE13", "PE14", "PE15";
 		function = "gpio_in";
+                allwinner,muxsel = <0>;
+                allwinner,drive = <1>;
+                allwinner,pull = <0>;
+
 	};
 	spi0_pins_a: spi0@0 {
 		pins = "PC2", "PC4", "PC5","PC7", "PC6"; /*clk mosi miso hold wp*/
@@ -1079,23 +1084,52 @@
                  reg = <1>;
                  max-speed = <1000>;  /* Max speed capability */
                  reset-gpios = <&pio PE 16 GPIO_ACTIVE_LOW>;
-                  /* PHY datasheet rst time */
-                 reset-assert-us = <10000>;
-                 reset-deassert-us = <15000>;
       };
 };
 
+#if 0
+&gmac0 {
+	phy-mode = "rgmii";
+	use_ephy25m = <1>;
+	pinctrl-0 = <&gmac0_pins_a>;
+	pinctrl-1 = <&gmac0_pins_b>;
+	pinctrl-names = "default", "sleep";
+	phy-rst = <&pio PE 16 GPIO_ACTIVE_HIGH>;
+	tx-delay = <3>; /*2~4*/
+	rx-delay = <0>;
+	status = "okay";
+};
+&gmac0 {
+	pinctrl-0 = <&gmac0_pins_a>;
+	pinctrl-1 = <&gmac0_pins_b>;
+	pinctrl-names = "default", "sleep";
+	phy-mode = "rgmii";
+	use_ephy25m = <0>;
+	phy-rst = <&pio PG 13 GPIO_ACTIVE_LOW>;
+	tx-delay = <2>;
+	rx-delay = <0>;
+	phy-tx-delay = <3>;
+	phy-rx-delay = <0>;
+	status = "okay";
+};
+#endif
 &gmac0 {
 	phy-mode = "rgmii";
 	pinctrl-0 = <&gmac0_pins_a>;
 	pinctrl-1 = <&gmac0_pins_b>;
 	pinctrl-names = "default", "sleep";
 	sunxi,phy-clk-type =<0>;
-	tx-delay =<3>;
-	rx-delay =<4>;
+	use_ephy25m = <0>;
+	tx-delay = <0>;
+	rx-delay = <0>;
+	phy-rst = <&pio PE 16 GPIO_ACTIVE_HIGH>; 
+//	tx-delay = <2>;
+//	rx-delay = <0>;
+//	phy-tx-delay = <3>;
+//	phy-rx-delay = <0>;
+//	gmac3v3-supply = <&reg_3v3>;
 	status = "okay";
 };
-
 #if 0
 &gmac0 {
 	pinctrl-0 = <&gmac0_pins_a>;
@@ -1348,6 +1382,7 @@ chn_cfg_mode     : Hardware DE channel allocation config. 0:single display with 
                    display, 2:dual display with 3 channel in main display and 3 channel in second
                    in display.
 ----------------------------------------------------------------------------------*/
+
 &disp {
 	disp_init_enable         = <1>;
 	disp_mode                = <0>;
@@ -1379,8 +1414,8 @@ chn_cfg_mode     : Hardware DE channel allocation config. 0:single display with 
 	def_output_dev           = <0>;
 
 	fb0_format               = <0>;
-	fb0_width                = <480>;
-	fb0_height               = <800>;
+	fb0_width                = <0>;
+	fb0_height               = <0>;
 
 	fb1_format               = <0>;
 	fb1_width                = <0>;
@@ -1470,6 +1505,7 @@ pull up or pull down(default 0), driver level(default 1), data>
 ;For lvds1: use lvds1_pins_a  and lvds1_pins_b instead
 ;For lvds0: use lvds0_pins_a  and lvds0_pins_b instead
 ;----------------------------------------------------------------------------------*/
+#if 0
 &lcd0 {
 	lcd_used            = <1>;
 
@@ -1520,6 +1556,58 @@ pull up or pull down(default 0), driver level(default 1), data>
 	lcd_gpio_0 =  <&pio PD 21 GPIO_ACTIVE_HIGH>;
 	pinctrl-0 = <&dsi4lane_pins_a>;
 	pinctrl-1 = <&dsi4lane_pins_b>;
+};
+#endif
+&lcd0 {
+        lcd_used            = <1>;
+
+        lcd_driver_name     = "tft08006";
+        lcd_backlight       = <100>;
+        lcd_if              = <4>;
+
+        lcd_x               = <800>;
+        lcd_y               = <1280>;
+        lcd_width           = <52>;
+        lcd_height          = <52>;
+        lcd_dclk_freq       = <70>;
+
+        lcd_pwm_used        = <1>;
+        lcd_pwm_ch          = <2>;
+        lcd_pwm_freq        = <1000>;
+        lcd_pwm_pol         = <0>;
+        lcd_pwm_max_limit   = <255>;
+
+        lcd_hbp             = <32>;
+        lcd_ht              = <868>;
+        lcd_hspw            = <4>;
+        lcd_vbp             = <12>;
+        lcd_vt              = <1311>;
+        lcd_vspw            = <4>;
+
+        lcd_dsi_if          = <0>;
+        lcd_dsi_lane        = <4>;
+        lcd_lvds_if         = <0>;
+        lcd_lvds_colordepth = <0>;
+        lcd_lvds_mode       = <0>;
+        lcd_frm             = <0>;
+        lcd_hv_clk_phase    = <0>;
+        lcd_hv_sync_polarity= <0>;
+        lcd_io_phase        = <0x0000>;
+        lcd_gamma_en        = <0>;
+        lcd_bright_curve_en = <0>;
+        lcd_cmap_en         = <0>;
+        lcd_fsync_en        = <0>;
+        lcd_fsync_act_time  = <1000>;
+        lcd_fsync_dis_time  = <1000>;
+        lcd_fsync_pol       = <0>;
+
+        deu_mode            = <0>;
+        lcdgamma4iep        = <22>;
+        smart_color         = <90>;
+
+	lcd_gpio_0 =  <&pio PD 21 GPIO_ACTIVE_HIGH>;
+        pinctrl-0 = <&dsi4lane_pins_a>;
+        pinctrl-1 = <&dsi4lane_pins_b>;
 };
 /*
 &lcd0 {

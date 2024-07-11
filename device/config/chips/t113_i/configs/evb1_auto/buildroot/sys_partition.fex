@@ -65,6 +65,12 @@ size = 16384
     user_type    = 0x8000
 
 [partition]
+    name         = riscv
+    size         = 2048
+    downloadfile = "amp_rv0.fex"
+    user_type    = 0x8000
+
+[partition]
     name         = private
     size         = 32768
     ro           = 0
