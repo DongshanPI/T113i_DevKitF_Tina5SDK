@@ -28,6 +28,7 @@ disp-$(CONFIG_SUNXI_DISP2_FB_HW_ROTATION_SUPPORT) += fb_g2d_rot.o
 disp-objs += lcd/panels.o lcd/lcd_source.o lcd/default_panel.o
 disp-objs += of_service.o de/lcd_debug.o
 
+disp-$(CONFIG_LCD_SUPPORT_LT8912B) += lcd/lt8912b.o
 disp-$(CONFIG_LCD_SUPPORT_HE0801A068) += lcd/he0801a068.o
 disp-$(CONFIG_EINK_PANEL_USED) += lcd/default_eink.o
 disp-$(CONFIG_LCD_SUPPORT_LT070ME05000) += lcd/lt070me05000.o

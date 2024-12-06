@@ -22,6 +22,12 @@ config LCD_SUPPORT_FD055HD003S
 	---help---
 		If you want to support fd055hd003s panel for display driver, select it.
 
+config LCD_SUPPORT_LT8912B
+        bool "LCD support LT8912B MIPI DSI to HDMI connector"
+        default y
+        ---help---
+                if you want to enable support for MIPI DSI to HDMI connector.
+
 config LCD_SUPPORT_HE0801A068
 	bool "LCD support he0801a068 panel"
 	default y

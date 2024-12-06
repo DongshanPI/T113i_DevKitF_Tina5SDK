@@ -419,14 +419,16 @@
 		function = "gpio_in";
 	};
 	twi2_pins_a: twi2@0 {
-                pins = "PC0", "PC1";
+                //pins = "PC0", "PC1";
+                pins = "PD20", "PD21";
                 function = "twi2";
 		allwinner,muxsel = <3>;
                 drive-strength = <10>;
         };
 
         twi2_pins_b: twi2@1 {
-                pins = "PC0", "PC1";
+                //pins = "PC0", "PC1";
+                pins = "PD20", "PD21";
                 function = "gpio_in";
         };
 
@@ -626,12 +628,13 @@
 	
 	spi1_pins_a: spi1@0 {
 		//pins = "PB11", "PB10", "PB9","PB8", "PB0"; /*clk mosi miso hold wp*/
+		pins = "PD11", "PD12"; /*clk mosi miso hold wp*/
 		function = "spi1";
 		drive-strength = <10>;
 	};
 
 	spi1_pins_b: spi1@1 {
-		pins = "PB12";
+		pins = "PD10";
 		function = "spi1";
 		drive-strength = <10>;
 		bias-pull-up;   // only CS should be pulled up
@@ -639,6 +642,7 @@
 
 	spi1_pins_c: spi1@2 {
 		//allwinner,pins = "PB0", "PB8", "PB9", "PB10","PB11", "PB12";
+		allwinner,pins = "PD10", "PD11", "PD12", "PD13","PD14", "PD15";
 		allwinner,function = "gpio_in";
 		allwinner,muxsel = <0>;
 		drive-strength = <10>;
@@ -852,28 +856,18 @@
 	pinctrl-names = "default", "sleep";
 	status = "disabled";
 };
-/*
+
 &twi2 {
-	clock-frequency = <400000>;
-	//pinctrl-0 = <&twi2_pins_a>;
-	//pinctrl-1 = <&twi2_pins_b>;
-	pinctrl-names = "default", "sleep";
-	twi_drv_used = <1>;
-	dmas = <&dma 45>, <&dma 45>;
-	dma-names = "tx", "rx";
-	status = "disabled";
-};
-*/
-&twi2 {
-        clock-frequency = <400000>;
+        //clock-frequency = <400000>;
+        clock-frequency = <100000>;
         pinctrl-0 = <&twi2_pins_a>;
         pinctrl-1 = <&twi2_pins_b>;
         pinctrl-names = "default", "sleep";
 	twi_drv_used = <1>;
-        dmas = <&dma 45>, <&dma 45>;
-        dma-names = "tx", "rx";
+       	dmas = <&dma 45>, <&dma 45>;
+       	dma-names = "tx", "rx";
         status = "okay";
-
+/*
 	ctp@38 {
                 compatible = "focaltech,fts";
                 reg = <0x38>;
@@ -890,57 +884,30 @@
 		focaltech,reg_vdd = <&reg_3v3>;
 		focaltech,reg_avdd = <&reg_3v3>;
         };
-
-/*
-	ctp@38 {
-                status = "okay";
-                ctp_used = <1>;
-                //ctp_name = "edt-ft5x06";
-                ctp_twi_id = <0x2>;
-                ctp_twi_addr = <0x38>;
-                ctp_screen_max_x = <0x480>;
-                ctp_screen_max_y = <0x800>;
-                ctp_revert_x_flag = <0x0>;
-                ctp_revert_y_flag = <0x1>;
-                ctp_exchange_x_y_flag = <0x0>;
-		reg_name = "edt-ft5x06";
-		threshold = <0>;
-		gain = <0>;
-		offset = <0>;
-		offset-x = <0>;
-		offset-y = <0>;
-		num_x = <480>;
-		num_y = <800>;
-		mode = <0>;
-		raw_data = <0>;
-		reg_threshold=<0>;
-		reg_report_rate=<0>;
-		reg_gain=<0>;
-		reg_offset=<0>;
-		reg_offset_x=<0>;
-		reg_offset_y=<0>;
-		reg_num_x=<480>;
-		reg_num_y=<800>;
-		reset = <&pio PB 10 6 1 3 0xffffffff>;
-                wakeup   = <&pio PE 17 1 3 0xffffffff>;
-        };
 */
-	/*
-       ctp@38 {
+	lt8912b@48 {
+		compatible = "lt,lt8912b";
+		reg = <0x48>;
+		status = "okay";
+	};
+
+	focaltech@38{
                 status = "okay";
-                ctp_used = <1>;
-                ctp_name = "ft6336";
-                ctp_twi_id = <0x2>;
-                ctp_twi_addr = <0x38>;
-                ctp_screen_max_x = <0x480>;
-                ctp_screen_max_y = <0x800>;
-                ctp_revert_x_flag = <0x0>;
-                ctp_revert_y_flag = <0x1>;
-                ctp_exchange_x_y_flag = <0x0>;
-                ctp_int_port = <&pio PB 10 6 1 3 0xffffffff>;
-                ctp_wakeup   = <&pio PE 17 1 1 3 0xffffffff>;
+                compatible = "focaltech,fts";
+                reg = <0x38>;
+                interrupt-parent = <&pio>;
+                interrupts = <PD 17 IRQ_TYPE_LEVEL_LOW>;
+                focaltech,reset-gpio = <&pio PD 18 GPIO_ACTIVE_HIGH>;
+                focaltech,irq-gpio = <&pio PD 17 IRQ_TYPE_LEVEL_LOW>;
+                //focaltech,irq-gpios = <&pio PB 3 GPIO_ACTIVE_LOW>; 
+
+                focaltech,max-touch-number = <10>;
+                focaltech,display-coords =  <0 0 320 480>;
+
+                focaltech,reg_vdd = <0x0000001f>;
+                focaltech,reg_avdd = <0x0000001f>;
         };
-	*/	
+
 };
 	
 &twi3 {
@@ -1032,7 +999,7 @@
 	spi_slave_mode = <0>;
 	spi1_cs_number = <1>;
         spi1_cs_bitmap = <1>;
-	status = "disabled";
+	status = "okay";
 
 	spi_board1@0 {
 		device_type = "spi_board1";
@@ -1043,6 +1010,22 @@
 		spi-tx-bus-width = <0x4>;
 		status = "disabled";
 	};
+
+	st7789v@0 {
+                status = "okay";
+                compatible = "sitronix,st7789v";
+                reg = <0>;
+                spi-max-frequency = <60000000>;
+                rotate = <0>;
+                bgr;
+                fps = <60>;
+                buswidth = <8>;
+                reset = <&pio PD 15 GPIO_ACTIVE_LOW>;
+                dc = <&pio PD 14 GPIO_ACTIVE_LOW>;
+                latch = <&pio PD 16 GPIO_ACTIVE_HIGH>;
+                debug = <1>;
+        };
+
 };
 
 &ledc {
@@ -1557,7 +1540,7 @@ pull up or pull down(default 0), driver level(default 1), data>
 	pinctrl-0 = <&dsi4lane_pins_a>;
 	pinctrl-1 = <&dsi4lane_pins_b>;
 };
-#endif
+
 &lcd0 {
         lcd_used            = <1>;
 
@@ -1609,6 +1592,104 @@ pull up or pull down(default 0), driver level(default 1), data>
         pinctrl-0 = <&dsi4lane_pins_a>;
         pinctrl-1 = <&dsi4lane_pins_b>;
 };
+
+
+&lcd0{
+	lcd_used            = <1>;
+
+	lcd_driver_name     = "default_lcd";
+	lcd_backlight       = <50>;
+	lcd_if              = <4>;
+
+	lcd_x               = <1920>;
+	lcd_y               = <1080>;
+	lcd_width           = <138>;
+	lcd_height          = <105>;
+	lcd_dclk_freq       = <148>;
+
+	lcd_pwm_used        = <1>;
+	lcd_pwm_ch          = <0>;
+	lcd_pwm_freq        = <50000>;
+	lcd_pwm_pol         = <0>;
+	lcd_pwm_max_limit   = <255>;
+
+
+	lcd_hbp             = <192>;
+	lcd_ht              = <2200>;
+	lcd_hspw            = <44>;
+	lcd_vbp             = <41>;
+	lcd_vt              = <1125>;
+	lcd_vspw            = <5>;
+
+	lcd_dsi_if          = <0>;
+	lcd_dsi_lane        = <4>;
+	lcd_dsi_format      = <0>;
+	lcd_dsi_eotp	    = <0>;
+	lcd_dsi_te          = <0>;
+	lcd_frm             = <0>;
+	lcd_hv_clk_phase    = <0>;
+	lcd_hv_sync_polarity= <0>;
+	lcd_gamma_en        = <0>;
+	lcd_bright_curve_en = <0>;
+	lcd_cmap_en         = <0>;
+	lcd_fsync_en        = <0>;
+	lcd_fsync_act_time  = <1000>;
+	lcd_fsync_dis_time  = <1000>;
+	lcd_fsync_pol       = <0>;
+
+	deu_mode            = <0>;
+	lcdgamma4iep        = <22>;
+	smart_color         = <90>;
+
+	//lcd_pin_power = "dcdce";
+	//lcd_pin_power1 = "eldo3";
+	lcd_bl_en = <&pio PD 19 1 0 3 1>;
+
+	//lcd_power = "dc1sw";
+	/*lcd_gpio_0 = <&pio PD 22 1 0 3 1>;*/
+	pinctrl-0 = <&dsi4lane_pins_a>;
+	pinctrl-1 = <&dsi4lane_pins_b>;
+	status = "okay";
+};
+#endif
+
+&lcd0 {
+        lcd_used            = <1>;
+
+        lcd_driver_name     = "panel-lt8912b-hdmi";
+        lcd_backlight       = <255>;
+        lcd_if              = <4>;
+
+        lcd_x               = <1920>;
+        lcd_y               = <1080>;
+        lcd_dclk_freq       = <148>;
+
+        lcd_hbp             = <192>;
+        lcd_ht              = <2200>;
+        lcd_hspw            = <44>;
+        lcd_vbp             = <41>;
+        lcd_vt              = <1125>;
+        lcd_vspw            = <5>;
+
+        lcd_dsi_lane        = <4>;
+        lcd_dsi_if          = <0>;
+        lcd_dsi_format      = <0>;
+        lcd_dsi_te          = <0>;
+        lcd_frm             = <0>;
+        lcd_io_phase        = <0>;
+        lcd_gamma_en        = <0>;
+        lcd_bright_curve_en = <0>;
+        lcd_cmap_en         = <0>;
+
+        deu_mode            = <0>;
+        lcdgamma4iep        = <22>;
+        smart_color         = <90>;
+
+        lcd_gpio_0 = <&pio PE 17 GPIO_ACTIVE_HIGH>;
+        pinctrl-0 = <&dsi4lane_pins_a>;
+        pinctrl-1 = <&dsi4lane_pins_b>;
+};
+
 /*
 &lcd0 {
 	lcd_used            = <1>;
