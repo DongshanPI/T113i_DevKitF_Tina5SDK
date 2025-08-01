@@ -1,0 +1,158 @@
+{
+	"emmc" : {
+		"sysconfig" : {
+			"target" : {
+				"storage_type" : 2
+			}
+		},
+
+		"board.dts" : {
+			"set_property" : {
+				"spi0" : {
+					"status" : "\"disabled\""
+				},
+				"sdc2" : {
+					"status" : "\"okay\""
+				}
+			}
+		},
+
+		"env" : [
+			{ "name" : "rootfstype", "val": "squashfs", "method" : "add" }
+		],
+
+		"uboot-board.dts" : {
+			"set_property" : {
+				"spi0" : {
+					"status" : "\"disabled\""
+				}
+			}
+		},
+
+		"kernel" : [
+			"# CONFIG_PSTORE is not set", "CONFIG_BLK_DEV=y",
+			"CONFIG_BLOCK=y", "CONFIG_EXT4_FS=y", "# CONFIG_AW_MTD is not set"
+		],
+
+		"openwrt" : [
+			"# CONFIG_PACKAGE_mtd-utils is not set", "# CONFIG_SUNXI_SMALL_STORAGE_OTA is not set",
+			"CONFIG_PACKAGE_e2fsprogs=y", "# CONFIG_USE_MKLIBS is not set",
+			"CONFIG_SUNXI_SD_BOOT_KERNEL_FORMAT_BOOTIMG=y"
+		]
+	},
+
+	"nand" : {
+		"sysconfig" : {
+			"target" : {
+				"storage_type" : 5
+			}
+		},
+
+		"uboot-board.dts" : {
+			"set_property" : {
+				"spi0" : {
+					"status" : "\"okay\""
+				},
+				"spi-nand@0" : {
+					"status" : "\"okay\""
+				},
+				"spi_board0" : {
+					"status" : "\"disabled\""
+				}
+			}
+		},
+
+		"env" : [
+			{ "name" : "rootfstype", "val": "squashfs", "method" : "add" }
+		],
+
+		"board.dts" : {
+			"set_property" : {
+				"spi0" : {
+					"status" : "\"okay\""
+				},
+				"spi-nand@0" : {
+					"status" : "\"okay\""
+				},
+				"spi_board@0" : {
+					"status" : "\"disabled\""
+				}
+			}
+		},
+
+		"kernel" : [
+			"# CONFIG_PSTORE is not set", "CONFIG_MTD_BLKDEVS", "CONFIG_MTD_UBI=y", "CONFIG_MTD_UBI_BLOCK=y",
+			"CONFIG_EXT4_FS=y", "CONFIG_MTD_BLOCK=y", "CONFIG_AW_MTD_SPINAND=y", "CONFIG_UBIFS_FS=y",
+			"# CONFIG_UBIFS_FS_ADVANCED_COMPR is not set", "# CONFIG_UBIFS_FS_LZO is not set",
+			"# CONFIG_UBIFS_FS_ZLIB is not set", "# CONFIG_UBIFS_FS_ZSTD is not set",
+			"# CONFIG_AW_MTD_RAWNAND is not set"
+		],
+
+		"openwrt" : [
+			"CONFIG_SUNXI_SD_BOOT_KERNEL_FORMAT_BOOTIMG=y", "# CONFIG_SUNXI_SMALL_STORAGE_OTA is not set",
+			"CONFIG_PACKAGE_e2fsprogs=y", "CONFIG_PACKAGE_mtd-utils=y", "CONFIG_PACKAGE_mtd-utils-mkfs.ubifs=y",
+			"# CONFIG_USE_MKLIBS is not set"
+		],
+		"partition" : [
+			{"name" : "mbr", "size" : "252"},
+			{"name" : "boot-resource", "size" : "504"},
+			{"name" : "env", "size" : "504"},
+			{"name" : "env-redund", "size" : "504"},
+			{"name" : "boot", "size" : "35280"},
+			{"name" : "rootfs", "size" : "50400"}
+		]
+	},
+
+	"nor" : {
+		"sysconfig" : {
+			"target" : {
+				"storage_type" : 3
+			}
+		},
+
+		"board.dts" : {
+			"set_property" : {
+				"spi0" : {
+					"status" : "\"okay\""
+				},
+				"spi-nand@0" : {
+					"status" : "\"disabled\""
+				},
+				"spi_board@0" : {
+					"status" : "\"okay\""
+				},
+				"sdc2" : {
+					"status" : "\"disabled\""
+				}
+			}
+		},
+
+		"uboot-board.dts" : {
+			"set_property" : {
+				"spi0" : {
+					"status" : "\"okay\""
+				},
+				"spi-nand@0" : {
+					"status" : "\"disabled\""
+				},
+				"spi_board0" : {
+					"status" : "\"okay\""
+				}
+			}
+		},
+
+		"kernel" : [
+			"# CONFIG_BLK_DEV is not set", "# CONFIG_PSTORE is not set",
+			"CONFIG_MTD=y", "CONFIG_AW_MTD_SUNXI_PARTS=y", "CONFIG_MTD_BLOCK=y",
+			"CONFIG_MTD_OF_PARTS=y", "CONFIG_MISC_FILESYSTEMS=y", "CONFIG_MTD_SPI_NOR=y",
+			"CONFIG_JFFS2_FS=y", "# CONFIG_EXT4_FS is not set", "CONFIG_MTD_SUNXI_PARTS=y"
+		],
+
+		"openwrt" : [
+			"CONFIG_PACKAGE_mtd-utils=y", "CONFIG_PACKAGE_mtd-utils-mkfs.jffs2=y",
+			"# CONFIG_PACKAGE_e2fsprogs is not set", "CONFIG_SUNXI_SD_BOOT_KERNEL_FORMAT_UIMAGE=y",
+			"# CONFIG_PACKAGE_mtd-utils-mkfs.ubifs is not set", "# CONFIG_PACKAGE_mtd-utils-ubiblock is not set",
+			"# CONFIG_PACKAGE_mtd-utils-ubinfo is not set", "# CONFIG_PACKAGE_mtd-utils-ubiupdatevol is not set"
+		]
+	}
+}

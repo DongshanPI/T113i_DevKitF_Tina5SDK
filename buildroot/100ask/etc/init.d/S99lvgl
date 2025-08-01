@@ -1,0 +1,31 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          lvgl_demo
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start lv_g2d_test and lvglsim
+### END INIT INFO
+
+case "$1" in
+  start)
+        echo "Starting lvgl demo..."
+        echo 3 > /proc/sys/kernel/printk
+        /usr/bin/lv_g2d_test &
+        export LV_LINUX_EVDEV_POINTER_DEVICE=/dev/input/event3
+        /usr/bin/lvglsim &
+        ;;
+  stop)
+        echo "Stopping lvgl demo..."
+        killall lvglsim 2>/dev/null
+        killall lv_g2d_test 2>/dev/null
+        ;;
+  restart|reload)
+        "$0" stop
+        "$0" start
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0
